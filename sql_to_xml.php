@@ -1,6 +1,6 @@
 <?php
 
-function parseToXML($htmlStr){
+function parseToXML($htmlStr){ //function to parse the html tags
     $xmlStr=str_replace('<','&lt;',$htmlStr);
     $xmlStr=str_replace('>','&gt;',$xmlStr);
     $xmlStr=str_replace('"','&quot;',$xmlStr);
@@ -34,7 +34,7 @@ echo "<?xml version='1.0' ?>";
 echo '<markers>';
 $ind=0;
 // Iterate through the rows, printing XML nodes for each
-while ($row = @mysqli_fetch_assoc($result)){
+while ($row = @mysqli_fetch_assoc($result)){ //fetches a result row as an associative array
   // Add to XML document node
   echo '<marker ';
   echo 'id="' . $row['id'] . '" ';
