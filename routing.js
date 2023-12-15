@@ -1,4 +1,4 @@
-var graph = new DirectedGraph(); //Required by connector
+var graph = new DirectedGraph(); 
 var INFINITY = 1 / 0;
 var x_path = [];
 
@@ -8,12 +8,12 @@ function route_setup(){
     
     
     connector();
-    console.log("crossed conn"); 
+    console.log("conexao feita"); 
     var out = djikstra(graph, '0');
-    console.log("crossed djikstra");
+    console.log("djikstra feita");
     for (i = 0; i < data.features.length; i++) {
-        for (j = 0; j < out.shortestPaths[end_point].length; j++) {
-            if (String(i) == out.shortestPaths[end_point][j]) {
+        for (j = 0; j < out.caminha_curto[end_point].length; j++) {
+            if (String(i) == out.caminha_curto[end_point][j]) {
                 var x_i = i;
                 x_path.push({
                     lat: data.features[x_i].geometry.coordinates[1],
@@ -30,7 +30,7 @@ function route_setup(){
     return x_path;
 }
 
-function DirectedGraph() {
+function DirectedGraph() { //cria um objeto grafo
     this.vertices = {};
     this.addVertex = function(name, edges) {
         edges = edges || null;
@@ -38,50 +38,50 @@ function DirectedGraph() {
     };
 }
 
-function djikstra(graph, startVertex) {
-    var dist = {};
-    var prev = {};
+function djikstra(graph, vertice_comeco) { //o grafo é um objeto DirectedGraph
+    var distancia = {};
+    var anterior = {};
     var q = {};
-    var shortestPaths = {};
+    var caminha_curto = {};
 
-    for (var vertex in graph.vertices) {
-        dist[vertex] = INFINITY;
-        prev[vertex] = null;
+    for (var vertex in graph.vertices) { //inicializa os vetores
+        distancia[vertex] = INFINITY;
+        anterior[vertex] = null;
         q[vertex] = graph.vertices[vertex];
-        shortestPaths[vertex] = [];
+        caminha_curto[vertex] = [];
     }
 
-    dist[startVertex] = 0;
+    distancia[vertice_comeco] = 0;
 
     while (Object.keys(q).length !== 0) {
-        var smallest = findSmallest(dist, q);
-        var smallestNode = graph.vertices[smallest];
-        //searches for the vertex u in the vertex set Q that has the least dist[smallest] value.
+        var menor = findmenor(distancia, q);
+        var menorNode = graph.vertices[menor];
+        //procura o vértice u no conjunto de vértices Q que tem o menor valor de distancia[menor].
 
-        for (var neighbor in smallestNode) {
-            var alt = dist[smallest] + smallestNode[neighbor];
-            //smallestNode[neighbor] is the distance between smallest and neighbor
-            if (alt < dist[neighbor]) {
-                dist[neighbor] = alt;
-                prev[neighbor] = smallest;
+        for (var vizinho in menorNode) {
+            var alt = distancia[menor] + menorNode[vizinho];
+            //menorNode[vizinho] é a distância entre o menor e o vizinho
+            if (alt < distancia[vizinho]) {
+                distancia[vizinho] = alt;
+                anterior[vizinho] = menor;
             }
         }
     }
 
-    getShortestPaths(prev, shortestPaths, startVertex, dist);
+    getcaminha_curto(anterior, caminha_curto, vertice_comeco, distancia); //preenche o vetor caminha_curto
     return {
-        shortestPaths: shortestPaths,
-        shortestDistances: dist
+        caminha_curto: caminha_curto,
+        shortestDistances: distancia
     };
 }
 
-function findSmallest(dist, q) {
+function findmenor(distancia, q) { //retorna o vértice u no conjunto de vértices Q que tem o menor valor de distancia[menor].
     var min = Infinity;
     var minNode;
 
-    for (var node in q) {
-        if (dist[node] <= min) {
-            min = dist[node];
+    for (var node in q) { //procura o vértice u no conjunto de vértices Q que tem o menor valor de distancia[menor].
+        if (distancia[node] <= min) {
+            min = distancia[node];
             minNode = node;
         }
     }
@@ -90,17 +90,17 @@ function findSmallest(dist, q) {
     return minNode;
 }
 
-function getShortestPaths(previous, shortestPaths, startVertex, dist) {
-    for (var node in shortestPaths) {
-        var path = shortestPaths[node];
+function getcaminha_curto(anteriorious, caminha_curto, vertice_comeco, distancia) { //preenche o vetor caminha_curto
+    for (var node in caminha_curto) {
+        var path = caminha_curto[node];
 
-        while (previous[node]) {
+        while (anteriorious[node]) {
             path.push(node);
-            node = previous[node];
+            node = anteriorious[node];
         }
 
         //gets the starting node in there as well if there was a path from it
-        if (dist[node] === 0) {
+        if (distancia[node] === 0) {
             path.push(node);
         }
         path.reverse();
@@ -108,18 +108,18 @@ function getShortestPaths(previous, shortestPaths, startVertex, dist) {
 }
 
 function weight(a, b) {
-    var R = 6371; // Radius of the earth in km
-    var dLat = deg2rad(b[1] - a[1]); // deg2rad below
+    var R = 6371; // Raio da Terra em km
+    var dLat = deg2rad(b[1] - a[1]); // deg2rad abaixo
     var dLon = deg2rad(b[0] - a[0]);
     var temp =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(deg2rad(a[1])) * Math.cos(deg2rad(b[1])) *
         Math.sin(dLon / 2) * Math.sin(dLon / 2);
     var c = 2 * Math.atan2(Math.sqrt(temp), Math.sqrt(1 - temp));
-    var d = R * c; // Distance in km
+    var d = R * c; // distância em km
     return d;
 }
 
-function deg2rad(deg) {
+function deg2rad(deg) { //converte graus para radianos
     return deg * (Math.PI / 180);
 }

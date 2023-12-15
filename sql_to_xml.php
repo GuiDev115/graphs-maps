@@ -1,6 +1,6 @@
 <?php
 
-function parseToXML($htmlStr){ //function to parse the html tags
+function parseToXML($htmlStr){ //função para analisar as tags html
     $xmlStr=str_replace('<','&lt;',$htmlStr);
     $xmlStr=str_replace('>','&gt;',$xmlStr);
     $xmlStr=str_replace('"','&quot;',$xmlStr);
@@ -9,18 +9,18 @@ function parseToXML($htmlStr){ //function to parse the html tags
     return $xmlStr;
 }
 
-$servername = "localhost";
-$servusername = "root";
-$servpassword = "";
+$servername = "localhost"; //nome do server
+$servusername = "root"; //nome do user
+$servpassword = "element115"; //password
 $dbname = "project_iwp";
 
-// Opens a connection to a MySQL server
+// Abre uma ligação a um servidor MySQL
 $connection= mysqli_connect($servername, $servusername, $servpassword, $dbname);
 if (!$connection) {
     die("Connection failed: " . mysqli_connect_error());
 }
 
-// Select all the rows in the markers table
+// Selecionar todas as linhas da tabela de marcadores
 $query = "SELECT * FROM markers WHERE 1";
 $result = mysqli_query($connection, $query);
 if (!$result) {
@@ -29,13 +29,13 @@ if (!$result) {
 
 header("Content-type: text/xml");
 
-// Start XML file, echo parent node
+// Iniciar o ficheiro XML, passo o nó principal
 echo "<?xml version='1.0' ?>";
 echo '<markers>';
 $ind=0;
-// Iterate through the rows, printing XML nodes for each
-while ($row = @mysqli_fetch_assoc($result)){ //fetches a result row as an associative array
-  // Add to XML document node
+// Iterar pelas linhas, imprimindo os nós XML para cada
+while ($row = @mysqli_fetch_assoc($result)){ 
+
   echo '<marker ';
   echo 'id="' . $row['id'] . '" ';
   echo 'lat="' . $row['lat'] . '" ';
@@ -44,7 +44,7 @@ while ($row = @mysqli_fetch_assoc($result)){ //fetches a result row as an associ
   $ind = $ind + 1;
 }
 
-// End XML file
+// Fim do XML
 echo '</markers>';
 
 ?>

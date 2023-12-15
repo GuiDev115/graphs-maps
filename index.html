@@ -1,4 +1,3 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
     <style>
@@ -23,20 +22,20 @@
     <nav class="navbar navbar-inverse">
             <div class="container-fluid">
               <div class="navbar-header">
-                <a class="navbar-brand" href="#">A.I.R.S.</a>
+                <a class="navbar-brand" href="#">Projeto em Grafos</a>
               </div>
               <ul class="nav navbar-nav">
-                <li><a href="maps.html">Map</a></li>
               </ul>
             </div>
     </nav>
-
-    <h3>Routing</h3>
-    Enter the marker-id:
+<div class="container">	
+    <h3>Caminho</h3>
+    Entre com um ID que irá mostrar o proximo passo do caminho:
     <br>
     <input type="text" id="end_point">
-    <button id="getRoute">submit</button>    
-
+    <button id="getRoute">Enviar</button>    
+</br>
+</div>
 
     <div id="map" style="position:fixed; left: 10%;"></div>
     <br>
@@ -49,23 +48,23 @@
             }
         };
 
-        var airport = {
+        var aeroporto = {
             lat: 33.64017019720775,
             lng: -84.444197108928
         };
 
-        var Path; // Polyline
+        var caminho;
         var map;
         function initMap(){
             map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 18,
-                center: airport,
+                center: aeroporto,
                 mapTypeId: 'terrain'
             });
 
             map.data.loadGeoJson(data);
             
-            // This section downloads the xml data generated and outputs the terminal T symbol on the marker
+            // Esta seção baixa os dados xml gerados e gera o símbolo do terminal T no marcador
 
             downloadUrl('../PHP/sql_to_xml.php', function(xml_data) {   
                 var xml = xml_data.responseXML;
@@ -87,7 +86,7 @@
                     });
                 });
 
-                for(var i = 0; i < data.features.length; i++){  // Need to find a better way to compare if the T marker is placed already
+                for(var i = 0; i < data.features.length; i++){  // Precisa encontrar uma maneira melhor de comparar se o marcador T já está colocado
                     var token = false;
 
                     var coords = data.features[i].geometry.coordinates;
@@ -118,33 +117,34 @@
                     }     
                 }
             });
-            /*---------------------------------------------------------------------------------------------*/
             
-            Path = new google.maps.Polyline({
+            caminho = new google.maps.Polyline({
                     geodesic: true,
                     strokeColor: '#FF0000',
                     strokeOpacity: 1.0,
                     strokeWeight: 2
             });
-            Path.setMap(map);
+            caminho.setMap(map);
             
-            // This section is related to the routing from entry to exit
+            // Esta seção está relacionada ao roteamento da entrada à saída
             
-            var submit_button = document.getElementById('getRoute');
+            var button_enviar = document.getElementById('getRoute');
             
-            google.maps.event.addDomListener(submit_button, 'click', function() {
-                path_temp = route_setup();
-                console.log(path_temp);
-                for(var i=0;i<path_temp.length;++i){
+            google.maps.event.addDomListener(button_enviar, 'click', function() {
+                caminho_temp = route_setup();
+                console.log(caminho_temp);
+                for(var i=0;i<caminho_temp.length;++i){
                     debugger
-                    var latLng_temp = new google.maps.LatLng(path_temp[i].lat,path_temp[i].lng);
-                    var line = Path.getPath();
+                    var latLng_temp = new google.maps.LatLng(caminho_temp[i].lat,caminho_temp[i].lng);
+                    var line = caminho.getPath();
                     line.push(latLng_temp);  
                 }
             }); 
             debugger
             console(line.getPath());          
         }
+
+        // Esta seção é responsável por baixar os dados do banco de dados e gerar os marcadores no mapa
 
         function downloadUrl(url, callback) {
             var request = window.ActiveXObject ?
