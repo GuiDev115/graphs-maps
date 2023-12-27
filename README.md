@@ -18,9 +18,13 @@ Detém apenas 43 vértices para o teste e os caminhos.
 # Uso
 
 Apenas executar o maps_script.html em seu browser que irá funcionar o projeto. Não há necessidade de instalação de
-alguma depedência. Pode iniciar diretamente no index.html.
+alguma depedência. Pode iniciar diretamente no index.html. API já está colocada, contudo há a necessidade de criar uma nova caso essa no codigo expire.
 
-API já está colocada, contudo há a necessidade de criar uma nova caso essa no codigo expire.
+### Exemplo do teste
+
+Do ponto do aeroporto para United Club
+
+![!\[Exemplo Teste\]](img/teste.png)
 
 # Note
 
@@ -33,3 +37,4 @@ API já está colocada, contudo há a necessidade de criar uma nova caso essa no
 
 O script tem apenas 43 marcadores. Para adicionar mais, é necessário editar a variável **data** utilizando o 
 editor GeoJson do Google e adicionar os vértices e as arestas adequados.
+

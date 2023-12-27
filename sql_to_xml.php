@@ -11,7 +11,7 @@ function parseToXML($htmlStr){ //função para analisar as tags html
 
 $servername = "localhost"; //nome do server
 $servusername = "root"; //nome do user
-$servpassword = "element115"; //password
+$servpassword = ""; //password
 $dbname = "project_iwp";
 
 // Abre uma ligação a um servidor MySQL
@@ -24,7 +24,7 @@ if (!$connection) {
 $query = "SELECT * FROM markers WHERE 1";
 $result = mysqli_query($connection, $query);
 if (!$result) {
-  die('Invalid query: ' . mysqli_error());
+  die('Invalid query: ' . mysqli_error($connection));
 }
 
 header("Content-type: text/xml");
